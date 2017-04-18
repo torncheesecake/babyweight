@@ -1,5 +1,4 @@
 var weightConv = {
-
 	button: document.getElementById('addButton'),
 	childNameElement: document.getElementById('childName'),
 	weightInput: document.getElementById('weightInput'),
@@ -24,39 +23,58 @@ var weightConv = {
 		if (weightConv.currentWeight > 0)
 		{
 			console.log(printOut);
-			document.getElementById("pResults").innerHTML = "Todays date is " + printOut.date + " " + printOut.child + " is: " + printOut.result;
+			document.getElementById("pResults").innerHTML =
+				"Todays date is " + printOut.date + " <br /> " +
+				printOut.child + " is: " +
+				printOut.result;
 			weightConv.currentWeightInputBox.value = ""; //Clear the box afterwards
 		}
-		// convert to JSON for moving to DB
-		var store = window.JSON.stringify(printOut);
-		console.log(store);
+		//
+		// send data to php using JSON
+		var sendData = JSON.stringify(printOut);
+		console.log("JSON " + sendData); // Test if stringify is working to conole
+		//
+		$.ajax(
+		{
+			url: 'send.php',
+			data:
+			{
+				stored: sendData
+			},
+			type: 'POST',
+			dataType: 'json',
+			cache: false,
+			success: function(data, textStatus, jqXHR)
+			{
+				console.log('Sent');
+			},
+			complete: function(data, textStatus, jqXHR)
+			{
+				console.log('Complete');
+			}
+		});
 		//
 	},
 	getChildName: function getChildName()
 	{
 		return document.getElementById('childName').value;
 	},
-
 	lbsFloor: function lbsFloor()
 	{
 		return Math.floor(weightConv.lbsTrunc());
 	},
-
 	lbsTrunc: function lbsTrunc()
 	{
 		return Math.trunc(weightConv.kg2grams) / weightConv.lbs;
 	},
-
 	ouncesCalc: function ouncesCalc()
 	{
 		return weightConv.kg2grams - weightConv.lbsFloor() * weightConv.lbs;
 	},
-
 	ozFloored: function ozFloored()
 	{
 		return Math.floor(weightConv.ouncesCalc()) / weightConv.oz;
 	},
-
 	ozTrunc: function ozTrunc()
 	{
 		return Math.trunc(weightConv.ozFloored());
@@ -66,5 +84,4 @@ var weightConv = {
 		return new Date().toLocaleDateString('en-GB');
 	}
 };
-
 weightConv.init();
