@@ -10,51 +10,6 @@ var weightConv = {
 	{
 		weightConv.button.addEventListener('click', weightConv.calculateValues);
 	},
-	calculateValues: function calculateValues()
-	{
-		weightConv.currentWeight = weightConv.currentWeightInputBox.value;
-		weightConv.kg2grams = weightConv.currentWeight * 1000; // current Weight to grams e.g 3.5kg to 3500g
-		// Print out the process to the console
-		var printOut = {
-			date: weightConv.getTodaysDate(),
-			child: weightConv.getChildName(),
-			result: weightConv.lbsFloor() + "lbs " + weightConv.ozTrunc() + "ozs"
-		};
-		if (weightConv.currentWeight > 0)
-		{
-			console.log(printOut);
-			document.getElementById("pResults").innerHTML =
-				"Todays date is " + printOut.date + " <br /> " +
-				printOut.child + " is: " +
-				printOut.result;
-			weightConv.currentWeightInputBox.value = ""; //Clear the box afterwards
-		}
-		//
-		// send data to php using JSON
-		var sendData = JSON.stringify(printOut);
-		console.log("JSON " + sendData); // Test if stringify is working to conole
-		//
-		$.ajax(
-		{
-			url: 'send.php',
-			data:
-			{
-				stored: sendData
-			},
-			type: 'POST',
-			dataType: 'json',
-			cache: false,
-			success: function(data, textStatus, jqXHR)
-			{
-				console.log('Sent');
-			},
-			complete: function(data, textStatus, jqXHR)
-			{
-				console.log('Complete');
-			}
-		});
-		//
-	},
 	getChildName: function getChildName()
 	{
 		return document.getElementById('childName').value;
@@ -82,6 +37,52 @@ var weightConv = {
 	getTodaysDate: function getTodaysDate()
 	{
 		return new Date().toLocaleDateString('en-GB');
+	},
+
+	calculateValues: function calculateValues()
+	{
+		weightConv.currentWeight = weightConv.currentWeightInputBox.value;
+		weightConv.kg2grams = weightConv.currentWeight * 1000; // current Weight to grams e.g 3.5kg to 3500g
+		// Print out the process to the console
+		var printOut = {
+			date: weightConv.getTodaysDate(),
+			child: weightConv.getChildName(),
+			result: weightConv.lbsFloor() + "lbs " + weightConv.ozTrunc() + "ozs"
+		};
+		if (weightConv.currentWeight > 0)
+		{
+			document.getElementById("pResults").innerHTML =
+				"Todays date is " + printOut.date + " <br /> " +
+				printOut.child + " is: " +
+				printOut.result;
+			weightConv.currentWeightInputBox.value = ""; //Clear the box afterwards
+			console.log(printOut);
+		}
+		else
+		{
+			var error = document.getElementById("pResults").innerHTML = "Did you mean to submit without a value?";
+			return error;
+		}
+		// send data to php
+		var jsonData = JSON.stringify(printOut);
+		console.log("JSON String " + jsonData);
+		$.ajax(
+		{
+			url: 'send.php',
+			data:
+			{
+				myData: jsonData
+			},
+			type: 'POST',
+			success: function(data)
+			{
+				console.log('Data has been sent!' + " " + data);
+			},
+			error: function(jqXHR, error, errorThrown)
+			{
+				console.log('Data not sent becuase of a ' + errorThrown + " " + jqXHR.responseText);
+			}
+		});
 	}
 };
 weightConv.init();

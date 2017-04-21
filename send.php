@@ -14,9 +14,9 @@
 //echo "Connected successfully";
 //$conn->close();
 //echo "...Connection Closed";
-
-$data = file_get_contents('weightconversion.js');
-$json = json_decode($data, true);
-print_r ($json);
-
+if(isset($_POST['myData'])){
+ $obj = json_decode($_POST['myData']);
+ print_r($_POST);
+ //some php operation
+}
 ?>
