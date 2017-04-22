@@ -64,25 +64,24 @@ var weightConv = {
 			return error;
 		}
 		// send data to php
-		var jsonData = JSON.stringify(printOut);
-		console.log("JSON String " + jsonData);
+		var jsonData = JSON.stringify(printOut, null, 4);
+		console.log("JSON output: \n" + jsonData);
+
 		$.ajax(
 		{
-			url: 'send.php',
-			data:
-			{
-				myData: jsonData
-			},
 			type: 'POST',
+			url: 'send.php',
+			data: jsonData,
 			success: function(data)
 			{
-				console.log('Data has been sent!' + " " + data);
+				console.log(data);
 			},
 			error: function(jqXHR, error, errorThrown)
 			{
-				console.log('Data not sent becuase of a ' + errorThrown + " " + jqXHR.responseText);
+				console.log('Data not sent! ' + errorThrown + " " + jqXHR.responseText);
 			}
 		});
+
 	}
 };
 weightConv.init();
