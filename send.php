@@ -1,22 +1,39 @@
 <?php
-// $servername = "localhost";
-//$username = "root";
-//$password = "xteo7404Magnum26";
-//$database = "babytracker";
+ini_set('display_errors', 1);
 
-// Create connection
-//$conn = new mysqli($servername, $username, $password, $database);
 
-// Check connection
-//if ($conn->connect_error) {
-//    die("Connection failed: " . $conn->connect_error);
-//}
-//echo "Connected successfully";
-//$conn->close();
-//echo "...Connection Closed";
-if(isset($_POST['myData'])){
- $obj = json_decode($_POST['myData']);
- print_r($_POST);
- //some php operation
+$servername = "localhost";
+$username = "root";
+$password = "xteo7404Magnum26";
+$database = "babytracker";
+
+//Create connection
+$mysqli = new mysqli($servername, $username, $password, $database);
+
+//Check connection
+/* check connection */
+if (mysqli_connect_errno()) {
+    printf("Connect failed: %s\n", mysqli_connect_error());
+    exit();
 }
+
+//$jsonString = '{"date": "2017-04-27", "child": "Oliver", "weight": "16lbs 4oz"}'; //This works
+$jsonString = file_get_contents('php://input');;
+$data = json_decode($jsonString, true);
+
+/* create a prepared statement */
+if ($stmt = $mysqli->prepare('INSERT INTO babytracker (date, child, weight) VALUES (?,?,?)')) {
+
+    /* bind parameters for markers */
+    $stmt->bind_param("sss", $data['date'], $data['child'], $data['weight']);
+
+    /* execute query */
+    $stmt->execute();
+    echo "Data sent";
+
+    /* close statement */
+    $stmt->close();
+}
+
+$mysqli->close();
 ?>

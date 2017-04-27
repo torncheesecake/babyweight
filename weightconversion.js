@@ -36,25 +36,28 @@ var weightConv = {
 	},
 	getTodaysDate: function getTodaysDate()
 	{
-		return new Date().toLocaleDateString('en-GB');
+		return new Date().toISOString().slice(0, 10);
 	},
-
+	finalWeight: function finalWeight()
+	{
+		return weightConv.lbsFloor() + weightConv.ozTrunc();
+	},
 	calculateValues: function calculateValues()
 	{
 		weightConv.currentWeight = weightConv.currentWeightInputBox.value;
 		weightConv.kg2grams = weightConv.currentWeight * 1000; // current Weight to grams e.g 3.5kg to 3500g
 		// Print out the process to the console
 		var printOut = {
-			date: weightConv.getTodaysDate(),
-			child: weightConv.getChildName(),
-			result: weightConv.lbsFloor() + "lbs " + weightConv.ozTrunc() + "ozs"
+			"date": weightConv.getTodaysDate(),
+			"child": weightConv.getChildName(),
+			"weight": weightConv.lbsFloor() + "lbs " + weightConv.ozTrunc() + "ozs"
 		};
 		if (weightConv.currentWeight > 0)
 		{
 			document.getElementById("pResults").innerHTML =
 				"Todays date is " + printOut.date + " <br /> " +
 				printOut.child + " is: " +
-				printOut.result;
+				printOut.weight;
 			weightConv.currentWeightInputBox.value = ""; //Clear the box afterwards
 			console.log(printOut);
 		}
@@ -64,14 +67,12 @@ var weightConv = {
 			return error;
 		}
 		// send data to php
-		var jsonData = JSON.stringify(printOut, null, 4);
-		console.log("JSON output: \n" + jsonData);
-
+		var jsonOutput = JSON.stringify(printOut);
 		$.ajax(
 		{
-			type: 'POST',
+			method: 'POST',
 			url: 'send.php',
-			data: jsonData,
+			data: jsonOutput,
 			success: function(data)
 			{
 				console.log(data);
@@ -81,7 +82,6 @@ var weightConv = {
 				console.log('Data not sent! ' + errorThrown + " " + jqXHR.responseText);
 			}
 		});
-
 	}
 };
 weightConv.init();
