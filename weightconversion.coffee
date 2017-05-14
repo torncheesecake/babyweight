@@ -4,7 +4,7 @@ weightConv =
   currentWeight: document.getElementById('weightInKg')
   lbs: 453.592
   oz: 28.3495
-  
+
   init: ->
     weightConv.button.addEventListener 'click', weightConv.calculateValues
     return
