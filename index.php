@@ -3,8 +3,8 @@ ini_set('display_errors', 1);
 
 
 $servername = "localhost";
-$username = "root";
-$password = "xteo7404Magnum26";
+$username = "secret";
+$password = "secret";
 $database = "babytracker";
 
 //Create connection
