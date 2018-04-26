@@ -2,9 +2,12 @@ weightConv =
   button: document.getElementById('addButton')
   childNameInput: document.getElementById('childName')
   currentWeight: document.getElementById('weightInKg')
+  anti: document.getElementById('antiRobot')
   lbs: 453.592
   oz: 28.3495
 
+  antiRobot: ->
+    document.getElementById('antiRobot').value
   init: ->
     weightConv.button.addEventListener 'click', weightConv.calculateValues
     return
@@ -21,7 +24,7 @@ weightConv =
   ozTrunc: ->
     Math.trunc weightConv.ozFloored()
   getTodaysDate: ->
-    (new moment).format 'YYYY-MM-DD'
+    moment().format 'YYYY-MM-DD'
   finalWeight: ->
     weightConv.lbsFloor() + 'lbs ' + weightConv.ozTrunc() + 'ozs'
   calculateValues: ->
@@ -33,14 +36,14 @@ weightConv =
       child: weightConv.getChildName()
       weight: weightConv.finalWeight()
 
-    if weightConv.currentWeight > 0
-      printDate = moment().format('dddd, MMMM Do, YYYY')
-      document.getElementById('pResults').innerHTML = 'Todays date is ' + printDate + ' <br /> ' + printOut.child + ' is: ' + printOut.weight
-      weightConv.currentWeight.value = ''
-      #Clear the box afterwards
-      console.log printOut
+    printDate = moment().format('dddd, MMMM Do, YYYY')
+    if weightConv.currentWeight? and weightConv.currentWeight <= 0 and weightConv.antiRobot != "Hillman"
+      document.getElementById('error').innerHTML = "Please input Values"
+      return false
     else
-      error = document.getElementById('pResults').innerHTML = 'Did you mean to submit without a value?'
+      document.getElementById("pResults").innerHTML =	"Todays date is " + printDate + " <br /> " +	printOut.child + " is: " +  				printOut.weight
+      weightConv.currentWeight.value = ""
+      console.log(printOut)
 
     jsonOutput = JSON.stringify(printOut)
     $.ajax
