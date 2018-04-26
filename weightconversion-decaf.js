@@ -53,7 +53,7 @@ var weightConv = {
 		if (weightConv.currentWeight > 0)
 		{
 			var printDate = moment().format("dddd, MMMM Do, YYYY");
-			document.getElementById("pResults").innerHTML =
+			document.getElementById("results").innerHTML =
 				"Todays date is " + printDate + " <br /> " +
 				printOut.child + " is: " +
 				printOut.weight;
@@ -62,23 +62,29 @@ var weightConv = {
 		}
 		else
 		{
-			var error = document.getElementById("pResults").innerHTML = "Did you mean to submit without a value?";
-			return error;
+			document.getElementById("error").innerHTML = "<span class='alert alert-danger'>" + 'Something went wrong! Did you input a value for weight?' + "</span>";
 		}
 		// send data to php
-		var jsonOutput = JSON.stringify(printOut);
 		$.ajax(
 		{
 			method: 'POST',
-			url: 'send.php',
-			data: jsonOutput,
+			url: 'http://localhost:5984/weights/',
+			contentType: "application/json",
+			data: JSON.stringify(printOut),
+			dataType: 'json',
 			success: function(data)
 			{
-				console.log(data);
+				document.getElementById("error").innerHTML = "<span class='alert alert-success'>" + 'Date sent to the DB' + "</span>";
+				console.log('Data sent to DB');
+				setTimeout(function() {
+					location.reload(); // remove success data
+					document.getElementById('weightInKg').value = ""; // clear weights in Kg box after success
+				}, 5000);
 			},
 			error: function(jqXHR, error, errorThrown)
 			{
-				console.log('Data not sent! ' + errorThrown + " " + jqXHR.responseText);
+				document.getElementById("error").innerHTML = "<span class='alert alert-danger'>" + 'Data not sent: ' + errorThrown + " " + jqXHR.responseText + "</span>";
+				console.log('Data not sent: ' + errorThrown + " " + jqXHR.responseText);
 			}
 		});
 	}
