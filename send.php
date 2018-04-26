@@ -2,10 +2,10 @@
 ini_set('display_errors', 1);
 
 
-$servername = "localhost";
-$username = "root";
-$password = "xteo7404Magnum26";
-$database = "babytracker";
+$servername = "";
+$username = "";
+$password = "";
+$database = "";
 
 //Create connection
 $mysqli = new mysqli($servername, $username, $password, $database);
