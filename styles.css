@@ -1,16 +1,23 @@
 @import url('https://fonts.googleapis.com/css?family=Lato|Merriweather');
-body {
-  font-family: 'Lato', sans-serif;
+body
+{
+    font-family: 'Lato', sans-serif;
 }
 
-h1, h2, h3, h4, h5 {
-  font-family: 'Merriweather', serif;
+h1,
+h2,
+h3,
+h4,
+h5
+{
+    font-family: 'Merriweather', serif;
 }
-header {
-  margin-top: 20px;
+header
+{
+    margin-top: 20px;
 }
-header h1 {
-padding-bottom: 1.25rem;
-margin-bottom: 2rem;
-border-bottom: .05rem solid #eee;
+header h1
+{
+    margin-bottom: 2rem;
+    padding-bottom: 1.25rem;  border-bottom: .05rem solid #eee;
 }

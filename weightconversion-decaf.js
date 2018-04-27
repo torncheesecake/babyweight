@@ -10,7 +10,8 @@ var weightConv = {
 	},
 	getChildName: function getChildName()
 	{
-		return document.getElementById('childName').value;
+		return document.getElementById('childName')
+			.value;
 	},
 	lbsFloor: function lbsFloor()
 	{
@@ -34,7 +35,14 @@ var weightConv = {
 	},
 	getTodaysDate: function getTodaysDate()
 	{
-		return new moment().format("YYYY-MM-DD");
+		return new moment()
+			.format("YYYY-MM-DD");
+	},
+	clearReload: function clearReload()
+	{
+		location.reload(); // reload the page
+		document.getElementById('weightInKg')
+			.value = ""; // clear any inputs
 	},
 	finalWeight: function finalWeight()
 	{
@@ -50,21 +58,29 @@ var weightConv = {
 			"child": weightConv.getChildName(),
 			"weight": weightConv.finalWeight()
 		};
-		if (weightConv.currentWeight > 0)
+		if (weightConv.currentWeight <= 0 || isNaN(weightConv.currentWeight))
 		{
-			var printDate = moment().format("dddd, MMMM Do, YYYY");
-			document.getElementById("results").innerHTML =
-				"Todays date is " + printDate + " <br /> " +
-				printOut.child + " is: " +
-				printOut.weight;
-			weightConv.currentWeight.value = ""; //Clear the box afterwards
-			console.log(printOut);
+			console.log("Was less than or equal to zero or return NaN");
+			document.getElementById("error")
+				.innerHTML = "<span class='alert alert-info'>" + "Cannot be blank or zero, please input a value." + "</span>";
+			setTimeout(function()
+			{
+				weightConv.clearReload()
+			}, 4000);
+			return false;
 		}
 		else
 		{
-			document.getElementById("error").innerHTML = "<span class='alert alert-danger'>" + 'Something went wrong! Did you input a value for weight?' + "</span>";
+			var printDate = moment()
+				.format("dddd, MMMM Do, YYYY");
+			document.getElementById("results")
+				.innerHTML =
+				"Todays date is " + printDate + " <br /> " +
+				printOut.child + " is: " +
+				printOut.weight;
+			console.log(printOut);
 		}
-		// send data to php
+		// send data to DB
 		$.ajax(
 		{
 			method: 'POST',
@@ -74,16 +90,22 @@ var weightConv = {
 			dataType: 'json',
 			success: function(data)
 			{
-				document.getElementById("error").innerHTML = "<span class='alert alert-success'>" + 'Date sent to the DB' + "</span>";
+				document.getElementById("error")
+					.innerHTML = "<span class='alert alert-success'>" + 'Data sent to the DB' + "</span>";
 				console.log('Data sent to DB');
-				setTimeout(function() {
-					location.reload(); // remove success data
-					document.getElementById('weightInKg').value = ""; // clear weights in Kg box after success
-				}, 5000);
+				setTimeout(function()
+				{
+					weightConv.clearReload()
+				}, 8000);
 			},
 			error: function(jqXHR, error, errorThrown)
 			{
-				document.getElementById("error").innerHTML = "<span class='alert alert-danger'>" + 'Data not sent: ' + errorThrown + " " + jqXHR.responseText + "</span>";
+				document.getElementById("error")
+					.innerHTML = "<span class='alert alert-danger'>" + 'Data not sent: ' + errorThrown + " " + jqXHR.responseText + "</span>";
+				setTimeout(function()
+				{
+					weightConv.clearReload()
+				}, 8000);
 				console.log('Data not sent: ' + errorThrown + " " + jqXHR.responseText);
 			}
 		});
