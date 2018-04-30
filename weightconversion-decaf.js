@@ -34,7 +34,7 @@ var weightConv = {
   },
   getTodaysDate: function getTodaysDate()
   {
-    return new moment().format("YYYY-MM-DD");
+    return new moment().format("DD-MM-YYYY");
   },
   clearReload: function clearReload()
   {
@@ -72,14 +72,16 @@ var weightConv = {
       console.log(printOut);
     }
     // send data to DB
-    $.ajax(
+    var db = new PouchDB('http://localhost:5984/weights');
+    var weight = {
+      "_id": new moment().format("DDMMYYYY") + weightConv.getChildName(),
+      "name": weightConv.getChildName(),
+      "weight": weightConv.finalWeight(),
+      "date": weightConv.getTodaysDate()
+    };
+    db.put(weight, function callback(err, result)
     {
-      method: 'POST',
-      url: 'http://localhost:5984/weights/',
-      contentType: "application/json",
-      data: JSON.stringify(printOut),
-      dataType: 'json',
-      success: function(data)
+      if(!err)
       {
         document.getElementById("error").innerHTML = "<span class='alert alert-success'>" + 'Data sent to the DB' + "</span>";
         console.log('Data sent to DB');
@@ -87,15 +89,14 @@ var weightConv = {
         {
           weightConv.clearReload();
         }, 8000);
-      },
-      error: function(jqXHR, error, errorThrown)
+      }
+      else
       {
         document.getElementById("error").innerHTML = "<span class='alert alert-danger'>" + 'Data not sent: ' + errorThrown + " " + jqXHR.responseText + "</span>";
         setTimeout(function()
         {
           weightConv.clearReload();
-        }, 8000);
-        console.log('Data not sent: ' + errorThrown + " " + jqXHR.responseText);
+        }, 12000);
       }
     });
   }
