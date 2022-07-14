@@ -49,7 +49,7 @@
         weight: weightConv.finalWeight()
       };
       printDate = moment().format('dddd, MMMM Do, YYYY');
-      if ((weightConv.currentWeight != null) && weightConv.currentWeight <= 0 && weightConv.antiRobot !== "Hillman") {
+      if ((weightConv.currentWeight != null) && weightConv.currentWeight <= 0 && weightConv.antiRobot !== "Surname") {
         document.getElementById('error').innerHTML = "Please input Values";
         return false;
       } else {
