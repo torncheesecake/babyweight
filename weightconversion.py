@@ -8,7 +8,7 @@ date_format =  '%s/%s/%s' % (date.month, date.day, date.year)
 
 while True:
     name = input("Name: ")
-    if name == 'Oliver' or name == 'Ethan':
+    if name == '#' or name == '#':
         print("Hello " + name)
         break
     else:
