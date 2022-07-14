@@ -37,7 +37,7 @@ weightConv =
       weight: weightConv.finalWeight()
 
     printDate = moment().format('dddd, MMMM Do, YYYY')
-    if weightConv.currentWeight? and weightConv.currentWeight <= 0 and weightConv.antiRobot != "Hillman"
+    if weightConv.currentWeight? and weightConv.currentWeight <= 0 and weightConv.antiRobot != "Surname"
       document.getElementById('error').innerHTML = "Please input Values"
       return false
     else
