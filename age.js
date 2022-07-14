@@ -71,6 +71,6 @@
     return ageString;
   };
 
-  document.getElementById('age').innerHTML = getAge('10/10/2016');
+  document.getElementById('age').innerHTML = getAge('DOB');
 
 }).call(this);
